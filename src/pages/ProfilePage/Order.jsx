@@ -1,5 +1,14 @@
 import React from 'react';
 import { Box, Typography, Button, Card, CardContent, Grid, Paper, Divider } from '@mui/material';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
+
+// Define your truck icon or use a default one from leaflet
+import L from 'leaflet';
+const truckIcon = new L.Icon({
+  iconUrl: 'https://png.pngtree.com/png-vector/20240131/ourmid/pngtree-small-cargo-truck-png-png-image_11574572.png',
+  iconSize: [30, 30],
+});
 
 const Order = () => {
   // Example order data
@@ -30,6 +39,11 @@ const Order = () => {
     shipping: 7.99,
     total: 82.96,
   };
+
+  // Example truck data
+  const deliveryTrucks = [
+    { id: 1, name: 'Truck 1', position: [6.692, -1.570] },
+  ];
 
   return (
     <Box sx={{ padding: 3, maxWidth: '900px', margin: '0 auto', backgroundColor: '#f9f9f9', borderRadius: 2 }}>
@@ -116,6 +130,30 @@ const Order = () => {
         <Button variant="contained" color="primary" sx={{ padding: '10px 40px', borderRadius: 50, fontWeight: 'bold', fontSize: '16px' }}>
           Contact Customer Service
         </Button>
+      </Box>
+
+      {/* Map Section */}
+      <Box sx={{ marginTop: 4 }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
+          Delivery Truck Location
+        </Typography>
+        <MapContainer 
+          center={[6.692, -1.570]}  // Center the map on Kumasi, Ghana
+          zoom={13} 
+          style={{ height: '500px', width: '100%' }}  // Adjust height as needed
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution="&copy; OpenStreetMap contributors"
+          />
+          
+          {/* Render truck markers on the map */}
+          {deliveryTrucks.map(truck => (
+            <Marker key={truck.id} position={truck.position} icon={truckIcon}>
+              <Popup>{truck.name}</Popup>
+            </Marker>
+          ))}
+        </MapContainer>
       </Box>
     </Box>
   );
